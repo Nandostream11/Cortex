@@ -27,6 +27,9 @@ render.experimental.xml
 *.jks
 *.keystore
 
+# Local secrets (dev OpenRouter keys etc. — real secrets live in AndroidSecretStore, not here)
+secrets.properties
+
 # Google Services (e.g. APIs or Firebase)
 google-services.json
 
