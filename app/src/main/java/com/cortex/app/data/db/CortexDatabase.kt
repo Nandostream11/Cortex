@@ -3,6 +3,8 @@ package com.cortex.app.data.db
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import android.content.Context
 import com.cortex.app.data.db.dao.ConnectorAccountDao
 import com.cortex.app.data.db.dao.EdgeDao
@@ -29,7 +31,7 @@ import com.cortex.app.data.db.entity.TaskEntity
         ConnectorAccountEntity::class,
         GuidanceEventEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 abstract class CortexDatabase : RoomDatabase() {
@@ -45,6 +47,22 @@ abstract class CortexDatabase : RoomDatabase() {
     companion object {
         private const val DATABASE_NAME = "cortex.db"
 
+        /**
+         * v1 -> v2: adds NodeEntity.subtype (nullable) and NodeEntity.importanceScore
+         * (defaulted), for the graph engine's EntityKind classification and ranking
+         * (ADR-0002). Additive only — existing nodes get subtype=NULL,
+         * importanceScore=0.0, nothing is dropped or rewritten. This is deliberately a
+         * real migration, not fallbackToDestructiveMigration(): CodingStandards.md rules
+         * out silently destroying user data, and by Phase 2 that data is memories, not
+         * scaffolding.
+         */
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE nodes ADD COLUMN subtype TEXT")
+                db.execSQL("ALTER TABLE nodes ADD COLUMN importanceScore REAL NOT NULL DEFAULT 0.0")
+            }
+        }
+
         @Volatile
         private var instance: CortexDatabase? = null
 
@@ -52,8 +70,8 @@ abstract class CortexDatabase : RoomDatabase() {
          * Room's SQLite file is not encrypted at the framework level; the sensitive
          * surface (API keys, connector tokens) is kept out of it entirely and lives in
          * [com.cortex.app.security.SecretStore] instead. Full at-rest DB encryption
-         * (SQLCipher or equivalent) is tracked as a hardening follow-up — see the
-         * Phase-1 notes in the audit response, not silently assumed here.
+         * (SQLCipher or equivalent) is tracked as a hardening follow-up — see
+         * docs/PHASE1_STATUS.md and docs/PHASE2_STATUS.md, not silently assumed here.
          */
         fun getInstance(context: Context): CortexDatabase =
             instance ?: synchronized(this) {
@@ -61,7 +79,9 @@ abstract class CortexDatabase : RoomDatabase() {
                     context.applicationContext,
                     CortexDatabase::class.java,
                     DATABASE_NAME
-                ).build().also { instance = it }
+                )
+                    .addMigrations(MIGRATION_1_2)
+                    .build().also { instance = it }
             }
     }
 }

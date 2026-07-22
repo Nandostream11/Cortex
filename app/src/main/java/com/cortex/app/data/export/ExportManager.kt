@@ -120,12 +120,14 @@ private fun MemoryItemDto.toEntity() = MemoryItemEntity(
 )
 
 private fun NodeEntity.toDto() = NodeDto(
-    id = id, label = label, type = type, canonicalName = canonicalName, description = description,
+    id = id, label = label, type = type, subtype = subtype, canonicalName = canonicalName, description = description,
+    importanceScore = importanceScore,
     createdAt = Instant.ofEpochMilli(createdAt).toString(), updatedAt = Instant.ofEpochMilli(updatedAt).toString()
 )
 
 private fun NodeDto.toEntity() = NodeEntity(
-    id = id, label = label, type = type, canonicalName = canonicalName, description = description,
+    id = id, label = label, type = type, subtype = subtype, canonicalName = canonicalName, description = description,
+    importanceScore = importanceScore,
     createdAt = Instant.parse(createdAt).toEpochMilli(), updatedAt = Instant.parse(updatedAt).toEpochMilli()
 )
 

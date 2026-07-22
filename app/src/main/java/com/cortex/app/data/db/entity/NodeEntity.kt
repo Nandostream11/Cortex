@@ -12,8 +12,11 @@ data class NodeEntity(
     @PrimaryKey val id: String,
     val label: String,
     val type: String,
+    /** See [com.cortex.app.domain.model.Node.subtype]. Nullable — added in schema v2. */
+    val subtype: String?,
     val canonicalName: String,
     val description: String?,
+    val importanceScore: Double = 0.0,
     val createdAt: Long,
     val updatedAt: Long
 )

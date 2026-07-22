@@ -59,8 +59,10 @@ data class NodeDto(
     val id: String,
     val label: String,
     val type: String,
+    val subtype: String? = null,
     val canonicalName: String,
     val description: String?,
+    val importanceScore: Double = 0.0,
     val createdAt: String,
     val updatedAt: String
 )

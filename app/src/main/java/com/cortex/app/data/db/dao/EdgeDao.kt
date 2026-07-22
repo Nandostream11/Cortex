@@ -12,6 +12,9 @@ interface EdgeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(edge: EdgeEntity)
 
+    @Query("SELECT * FROM edges WHERE id = :id")
+    suspend fun getById(id: String): EdgeEntity?
+
     @Query("SELECT * FROM edges WHERE fromNodeId = :nodeId OR toNodeId = :nodeId")
     suspend fun edgesTouching(nodeId: String): List<EdgeEntity>
 

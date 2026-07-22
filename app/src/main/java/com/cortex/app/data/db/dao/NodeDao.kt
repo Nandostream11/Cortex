@@ -27,8 +27,17 @@ interface NodeDao {
     @Query("SELECT * FROM nodes WHERE type = :type ORDER BY updatedAt DESC")
     fun observeByType(type: String): Flow<List<NodeEntity>>
 
+    @Query("SELECT * FROM nodes WHERE type = :type")
+    suspend fun getAllForType(type: String): List<NodeEntity>
+
     @Query("SELECT * FROM nodes ORDER BY updatedAt DESC")
     fun observeAll(): Flow<List<NodeEntity>>
+
+    @Query("SELECT * FROM nodes")
+    suspend fun getAll(): List<NodeEntity>
+
+    @Query("UPDATE nodes SET importanceScore = :score WHERE id = :id")
+    suspend fun updateImportanceScore(id: String, score: Double)
 
     @Query("DELETE FROM nodes WHERE id = :id")
     suspend fun delete(id: String)

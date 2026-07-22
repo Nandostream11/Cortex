@@ -64,8 +64,10 @@ fun NodeEntity.toDomain() = Node(
     id = id,
     label = label,
     type = NodeType.valueOf(type),
+    subtype = subtype,
     canonicalName = canonicalName,
     description = description,
+    importanceScore = importanceScore,
     createdAt = Instant.ofEpochMilli(createdAt),
     updatedAt = Instant.ofEpochMilli(updatedAt)
 )
@@ -74,8 +76,10 @@ fun Node.toEntity() = NodeEntity(
     id = id,
     label = label,
     type = type.name,
+    subtype = subtype,
     canonicalName = canonicalName,
     description = description,
+    importanceScore = importanceScore,
     createdAt = createdAt.toEpochMilli(),
     updatedAt = updatedAt.toEpochMilli()
 )
