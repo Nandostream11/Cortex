@@ -2,7 +2,7 @@ package com.cortex.app.ui.screens.capture
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.cortex.app.domain.usecase.CaptureTextMemoryUseCase
+import com.cortex.app.domain.usecase.MemoryLinkingPipeline
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -15,7 +15,12 @@ data class CaptureUiState(
     val error: String? = null
 )
 
-class CaptureViewModel(private val captureTextMemory: CaptureTextMemoryUseCase) : ViewModel() {
+/**
+ * Drives capture through [MemoryLinkingPipeline] (Phase 2) rather than the bare
+ * CaptureTextMemoryUseCase (Phase 1) — every capture now also extracts entities and
+ * links them into the graph, not just saves text to Room.
+ */
+class CaptureViewModel(private val memoryLinkingPipeline: MemoryLinkingPipeline) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CaptureUiState())
     val uiState: StateFlow<CaptureUiState> = _uiState
@@ -32,14 +37,17 @@ class CaptureViewModel(private val captureTextMemory: CaptureTextMemoryUseCase) 
         }
         _uiState.update { it.copy(isSaving = true, error = null) }
         viewModelScope.launch {
-            runCatching { captureTextMemory(text) }
-                .onSuccess { saved ->
+            runCatching { memoryLinkingPipeline(text) }
+                .onSuccess { result ->
+                    val entityCount = result.graphLink.entityNodes.size
+                    val category = result.memory.category.name.lowercase().replace('_', ' ')
+                    val confirmation = if (entityCount > 0) {
+                        "Saved as $category — linked $entityCount entit${if (entityCount == 1) "y" else "ies"}"
+                    } else {
+                        "Saved as $category"
+                    }
                     _uiState.update {
-                        CaptureUiState(
-                            inputText = "",
-                            isSaving = false,
-                            lastSavedConfirmation = "Saved as ${saved.category.name.lowercase().replace('_', ' ')}"
-                        )
+                        CaptureUiState(inputText = "", isSaving = false, lastSavedConfirmation = confirmation)
                     }
                 }
                 .onFailure { throwable ->
