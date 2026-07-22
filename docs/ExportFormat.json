@@ -1,0 +1,25 @@
+{
+  "formatVersion": 1,
+  "exportedAt": "iso-8601",
+  "app": "Cortex",
+  "encrypted": true,
+  "contents": {
+    "settings": {
+      "apiProvider": "OpenRouter",
+      "autonomyMode": "Passive|Proactive|Thinking|DailyBrief",
+      "connectorStates": "array"
+    },
+    "memories": "array",
+    "nodes": "array",
+    "edges": "array",
+    "tasks": "array",
+    "projects": "array",
+    "connectorAccounts": "array_without_secrets",
+    "guidanceEvents": "array"
+  },
+  "notes": [
+    "Secrets must never be exported in plaintext.",
+    "Restoration should preserve timestamps and provenance.",
+    "Import should merge duplicates carefully."
+  ]
+}

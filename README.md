@@ -8,11 +8,13 @@ Design docs (architecture, schema, security model, roadmap, issue backlog) live 
 this tree and drive what gets built and in what order — see `docs/PHASE1_STATUS.md` for
 where implementation currently stands against them.
 
-## Status: Phase 1 foundation in progress
+## Status: Phase 2 (local knowledge graph) in progress
 
 Not yet buildable end-to-end in a CI environment (no network access to Google's Maven
-repo was available while scaffolding this), so this has been reviewed carefully but not
-compiled by Android Studio yet. See `docs/PHASE1_STATUS.md` before continuing work.
+repo was available while building either phase), so this has been reviewed and, where
+possible, compiler-verified in isolation, but not compiled by Android Studio yet. See
+`docs/PHASE2_STATUS.md` before continuing work — it also covers what changed since
+Phase 1, including a real deduplication bug found and fixed this phase.
 
 ## Opening the project
 

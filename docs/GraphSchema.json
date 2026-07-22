@@ -1,0 +1,45 @@
+{
+  "nodes": [
+    {
+      "id": "string",
+      "label": "string",
+      "type": "Memory|Concept|Project|Task|Person|Tool|Paper|Bug|Goal|ConnectorSource",
+      "canonicalName": "string",
+      "description": "string",
+      "createdAt": "iso-8601",
+      "updatedAt": "iso-8601"
+    }
+  ],
+  "edges": [
+    {
+      "id": "string",
+      "fromNodeId": "string",
+      "toNodeId": "string",
+      "relationType": "MENTIONS|RELATED_TO|DERIVED_FROM|DEPENDS_ON|BLOCKS|RESOLVES|FOLLOW_UP_ON|SUPPORTS|CONTRADICTS|IMPORTED_FROM",
+      "weight": "number",
+      "confidence": "number",
+      "createdAt": "iso-8601"
+    }
+  ],
+  "memories": [
+    {
+      "id": "string",
+      "createdAt": "iso-8601",
+      "updatedAt": "iso-8601",
+      "rawText": "string",
+      "normalizedText": "string",
+      "sourceType": "voice|text|connector",
+      "sourceRef": "string",
+      "importanceScore": "number",
+      "confidenceScore": "number",
+      "isPinned": "boolean",
+      "isArchived": "boolean",
+      "tagIds": [
+        "string"
+      ],
+      "linkedNodeIds": [
+        "string"
+      ]
+    }
+  ]
+}
