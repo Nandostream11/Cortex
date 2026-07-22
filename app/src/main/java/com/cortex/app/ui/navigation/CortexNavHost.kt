@@ -23,8 +23,10 @@ import com.cortex.app.di.AppContainer
 import com.cortex.app.di.cortexViewModelFactory
 import com.cortex.app.ui.screens.capture.CaptureScreen
 import com.cortex.app.ui.screens.capture.CaptureViewModel
+import com.cortex.app.ui.screens.graph.GraphScreen
 import com.cortex.app.ui.screens.home.HomeScreen
 import com.cortex.app.ui.screens.placeholder.PlaceholderScreen
+import com.cortex.app.ui.screens.search.SearchScreen
 
 @Composable
 fun CortexApp(container: AppContainer) {
@@ -55,10 +57,13 @@ fun CortexApp(container: AppContainer) {
                 CaptureScreen(captureViewModel)
             }
             composable(CortexDestination.Search.route) {
-                PlaceholderScreen("Search", "Keyword + graph-aware search lands in Phase 2.")
+                SearchScreen(viewModel(factory = factory))
             }
             composable(CortexDestination.Graph.route) {
-                PlaceholderScreen("Graph", "The knowledge graph view lands once GraphEngine is built.")
+                // TODO(Phase 3): once a memory-detail screen exists, navigate to it here
+                // instead of doing nothing — tracked in docs/PHASE2_STATUS.md rather than
+                // half-building a detail screen just to wire this one callback.
+                GraphScreen(viewModel(factory = factory), onOpenRelatedMemories = {})
             }
             composable(CortexDestination.Guidance.route) {
                 PlaceholderScreen("Guidance", "Proactive suggestions and daily briefs land with GuidanceEngine.")
