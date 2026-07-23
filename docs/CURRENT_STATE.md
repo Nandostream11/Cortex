@@ -174,11 +174,17 @@ Encrypted connector credentials
 
 Password-encrypted backup
 
+Room database encryption at rest (SQLCipher via `net.zetetic:sqlcipher-android`,
+passphrase generated once and Keystore-protected via `SecretStore` — see ADR-0004).
+**Caveat, not a footnote**: unlike nearly everything else in this codebase, this could
+not be compiler-verified in the sandbox it was built in — SQLCipher needs a native
+Android runtime, not a plain JVM. Written carefully against current official docs, but
+treat it as its own explicit checkpoint at the first real Android build, not something
+safe to assume works alongside the rest.
+
 ---
 
 Pending
-
-Room database encryption (still open — now higher priority, see Known Risks)
 
 Key rotation
 
@@ -187,6 +193,9 @@ Secure backup verification
 Migration strategy — **partially resolved**: a real Migration(1,2) now exists and is
 additive-only; the strategy itself (how future migrations get reviewed/tested) is still
 informal.
+
+Plaintext-to-encrypted database migration path — not needed yet (no real installed base
+exists), but not designed for either; see ADR-0004's "What this does not cover."
 
 ---
 
@@ -231,9 +240,12 @@ High Priority
 
 - Verify full Gradle build — still the top item, now with substantially more code
   riding on it (Phase 2 is unverified at the Android-toolchain level; see Known Risks)
-- Encrypt Room database — still open, and more sensitive now that inferred
-  relationships between memories are queryable in plain SQLite, not just raw text
-- A real deduplication bug was found and fixed this phase (whole-string Levenshtein
+- **Resolved this session**: Room database encryption at rest (SQLCipher, ADR-0004).
+  Downgraded from "open gap" to "unverified integration" — the code exists and was
+  written carefully, but is the one piece in this codebase that genuinely couldn't be
+  compiler-checked here (SQLCipher needs a real Android runtime). Still worth treating
+  as high priority for a first-build checkpoint, just a different kind of risk now.
+- A real deduplication bug was found and fixed in Phase 2 (whole-string Levenshtein
   wrongly merged "Project A"/"Project B"); worth an explicit regression-test audit
   before trusting any *other* fuzzy-matching code written the same way in future phases
 
@@ -358,6 +370,12 @@ Public Release
   through a hand-built in-memory fake in tests, not real Room — this is a genuine gap,
   not an oversight, and should be closed with real Room instrumented tests before this
   layer is trusted in production.
+- **New**: the SQLCipher database-encryption integration (ADR-0004) is the single
+  least-verified piece of code in this repository — not because it was written
+  carelessly, but because it's the one thing genuinely impossible to compile-check
+  without a real Android runtime. If the first real build fails somewhere unexpected,
+  this is a reasonable first place to look, alongside the Compose Compiler class of
+  issue already found once in Phase 2.
 - Connector framework should remain optional and isolated — not started yet, no risk
   introduced this phase.
 - AI integration must not become the primary execution path — not started yet; every
