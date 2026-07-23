@@ -15,6 +15,7 @@ interface SecretStore {
     companion object {
         // Well-known keys. Connector secrets use "connector:<connectorId>" as the key.
         const val KEY_OPENROUTER_API_KEY = "openrouter_api_key"
+        const val KEY_DATABASE_PASSPHRASE = "database_passphrase"
         fun connectorKey(connectorId: String) = "connector:$connectorId"
     }
 }

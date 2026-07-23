@@ -18,6 +18,13 @@ navigationCompose = "2.8.5"
 room = "2.8.1"
 datastore = "1.1.1"
 securityCrypto = "1.1.0-alpha06"
+# net.zetetic:android-database-sqlcipher is deprecated (confirmed via web search this
+# session, not training knowledge - the rename happened close to/after this assistant's
+# cutoff). sqlcipher-android is its official long-term replacement, with a different API
+# (SupportOpenHelperFactory, not the old SupportFactory) and 16KB-page-size support
+# required for current Play Store submissions. See docs/adr/0004.
+sqlcipher = "4.15.0"
+androidxSqlite = "2.6.2"
 coroutines = "1.11.0"
 serializationJson = "1.7.3"
 junit = "4.13.2"
@@ -46,6 +53,8 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 
 datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "securityCrypto" }
+sqlcipher-android = { group = "net.zetetic", name = "sqlcipher-android", version.ref = "sqlcipher" }
+androidx-sqlite = { group = "androidx.sqlite", name = "sqlite", version.ref = "androidxSqlite" }
 
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serializationJson" }

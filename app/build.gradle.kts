@@ -73,6 +73,8 @@ dependencies {
 
     implementation(libs.datastore.preferences)
     implementation(libs.security.crypto)
+    implementation(libs.sqlcipher.android)
+    implementation(libs.androidx.sqlite)
 
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.serialization.json)

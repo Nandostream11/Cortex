@@ -16,6 +16,7 @@ import com.cortex.app.data.settings.SettingsRepository
 import com.cortex.app.domain.usecase.CaptureTextMemoryUseCase
 import com.cortex.app.domain.usecase.MemoryLinkingPipeline
 import com.cortex.app.security.AndroidSecretStore
+import com.cortex.app.security.DatabasePassphraseProvider
 import com.cortex.app.security.SecretStore
 
 /**
@@ -28,9 +29,13 @@ class AppContainer(context: Context) {
 
     private val appContext = context.applicationContext
 
-    val database: CortexDatabase by lazy { CortexDatabase.getInstance(appContext) }
-
     val secretStore: SecretStore by lazy { AndroidSecretStore(appContext) }
+
+    private val databasePassphraseProvider: DatabasePassphraseProvider by lazy {
+        DatabasePassphraseProvider(secretStore)
+    }
+
+    val database: CortexDatabase by lazy { CortexDatabase.getInstance(appContext, databasePassphraseProvider) }
 
     val settingsRepository: SettingsRepository by lazy { SettingsRepository(appContext) }
 
